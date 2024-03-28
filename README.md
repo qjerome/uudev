@@ -1,5 +1,8 @@
 # uudev
-uudev (User Udev) allows to run unprivileged hooks on udev events
+
+uudev (Unprivileged Udev) is a minimalistic, yet powerfull way to run **unprivileged hooks** on udev events.
+It can be easily integrated with [systemd user](./examples/uudev.service) so that it is loaded at the beginning
+of the user session.
 
 # Build a hook
 
