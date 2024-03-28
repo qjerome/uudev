@@ -11,5 +11,5 @@ build: clean
 	mkdir -p $(TARGET)
 	go build -o $(TARGET)/uudev main.go
 
-install: build
+install:
 	cp $(TARGET)/uudev $(INSTALL_DIR)
