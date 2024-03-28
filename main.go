@@ -234,8 +234,10 @@ func main() {
 	// monitoring mode
 	if monitor {
 		for event := range udevmon() {
-			b, _ := json.MarshalIndent(event, "", "    ")
-			fmt.Println(string(b))
+			if len(event) > 0 {
+				b, _ := json.MarshalIndent(event, "", "    ")
+				fmt.Println(string(b))
+			}
 		}
 		os.Exit(0)
 	}
