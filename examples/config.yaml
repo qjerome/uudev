@@ -1,0 +1,44 @@
+# Hook hibernating on low batter
+name: Hibernate on Low Battery
+env:
+  POWER_SUPPLY_CAPACITY_LEVEL: Low
+  POWER_SUPPLY_MANUFACTURER: LGC
+  POWER_SUPPLY_MODEL_NAME: 02DL007
+  POWER_SUPPLY_STATUS: Discharging
+  SUBSYSTEM: power_supply
+run: /usr/bin/systemctl hibernate
+delay: 0s
+---
+# Hook switching screens when a docking station is connected
+name: Catch connection to Lenovo docking and set screen
+env:
+  ACTION: add
+  DRIVER: hub
+  ID_VENDOR_FROM_DATABASE: Lenovo
+  PRODUCT: 17ef/30b6/5112
+  SUBSYSTEM: usb
+# We use autorandr to set the screen
+run: /usr/bin/autorandr -c docking
+# Waits a few seconds before executing
+delay: 5s
+---
+# Hook starting to backup things when the device is connected
+name: Automatic backup
+env:
+  ACTION: add
+  # Uniquely identify partition
+  ID_PART_ENTRY_UUID: c0f96181-bfe0-4d25-850f-21f36d345b6b
+run: /home/user/.local/bin/backup.hook
+delay: 0s
+# By defaults commands have a 60s timeout but backup usually run longer
+no-timeout: true
+---
+# Hook executing a script when the mouse is connected
+name: Mouse Hook
+env:
+  ACTION: add
+  ID_SERIAL: Logitech_USB_Receiver
+  ID_USB_VENDOR_ID: "046d"
+  ID_VENDOR_FROM_DATABASE: "Logitech, Inc."
+run: /home/user/.local/bin/mouse.hook
+delay: 5s
