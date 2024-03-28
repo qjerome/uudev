@@ -1,3 +1,6 @@
+# This unit files aims at being run in a systemd user service
+# so that each user can have its own uudev running
+
 [Unit]
 Description=Uudev Service
 
@@ -6,5 +9,7 @@ ExecStart=/bin/uudev
 Restart=always
 RestartSec=3
 
+# The following is not mandatory but is useful if you start
+# X server manually
 [Install]
 WantedBy=xinitrc.target
