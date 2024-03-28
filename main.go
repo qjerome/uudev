@@ -226,7 +226,7 @@ func main() {
 
 	flag.BoolVar(&debug, "d", debug, "Enable debug mode")
 	flag.BoolVar(&force, "f", force, "Force uudev to start by killing old instance")
-	flag.BoolVar(&template, "t", template, "Prints out a hook template")
+	flag.BoolVar(&template, "t", template, "Prints out a hook templates from events read from stdin")
 	flag.BoolVar(&monitor, "monitor", monitor, "Monitor udev events and print them to stdout")
 
 	flag.Parse()
@@ -246,10 +246,29 @@ func main() {
 			Run:   "/usr/bin/true",
 			Delay: defaultDelay.String(),
 		}
-		if b, err := yaml.Marshal(&r); err != nil {
-		} else {
-			fmt.Println(string(b))
+
+		dec := json.NewDecoder(os.Stdin)
+
+		var err error
+		for err != io.EOF {
+			e := Event{}
+
+			if err = dec.Decode(&e); err != nil {
+				if errors.Is(err, io.EOF) {
+					break
+				}
+				log.Fatalf("failed to unmarshall event: %s", err)
+			}
+
+			r.Env = e
+
+			if b, err := yaml.Marshal(&r); err != nil {
+			} else {
+				fmt.Println(string(b))
+			}
+
 		}
+
 		os.Exit(0)
 	}
 
