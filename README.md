@@ -30,3 +30,5 @@ jq 'select (.FIELD_A == "xyz")' /tmp/uudev.json | jq '{FIELD_X, FIELD_Y}'  | uud
 ```
 
 If you are happy with it you can dump it in a config file and edit it.
+
+Please see [examples directory](./examples) for concrete examples.
