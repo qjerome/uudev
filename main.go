@@ -218,13 +218,15 @@ func (u *Uudev) Run() {
 
 func main() {
 	var (
-		debug   bool
-		force   bool
-		monitor bool
+		debug    bool
+		force    bool
+		monitor  bool
+		template bool
 	)
 
 	flag.BoolVar(&debug, "d", debug, "Enable debug mode")
 	flag.BoolVar(&force, "f", force, "Force uudev to start by killing old instance")
+	flag.BoolVar(&template, "t", template, "Prints out a hook template")
 	flag.BoolVar(&monitor, "monitor", monitor, "Monitor udev events and print them to stdout")
 
 	flag.Parse()
@@ -235,6 +237,20 @@ func main() {
 			b, _ := json.MarshalIndent(event, "", "    ")
 			fmt.Println(string(b))
 		}
+		os.Exit(0)
+	}
+
+	if template {
+		r := Rule{
+			Name:  "Hook Template",
+			Run:   "/usr/bin/true",
+			Delay: defaultDelay.String(),
+		}
+		if b, err := yaml.Marshal(&r); err != nil {
+		} else {
+			fmt.Println(string(b))
+		}
+		os.Exit(0)
 	}
 
 	if data, err := os.ReadFile(uudevPid); err == nil {
